@@ -75,6 +75,8 @@ public class SplashView extends View {
             switch (attr) {
                 case R.styleable.SplashView_splash_text:
                     mSplashText = array.getString(attr);
+                    if (mSplashText == null)
+                        mSplashText = ".com";
                     break;
                 case R.styleable.SplashView_splash_size:
                     mSplashSizeEnd = array.getDimensionPixelSize(attr, (int) TypedValue.applyDimension(
@@ -92,7 +94,7 @@ public class SplashView extends View {
 
 
         mPaintSplashText.setTextSize(mSplashSizeStart);
-//        mPaintSplashText.getTextBounds(mSplashText, 0, mSplashText.length(), mBound);
+
 //        Log.d("init"," mBound--" + mBound.width()+ "---" + mBound.height()
 //         + "  mBoundEnd--" + mBoundEnd.width() + "--" + mBoundEnd.height());
 
@@ -213,7 +215,10 @@ public class SplashView extends View {
         }
 //        canvas.drawText(mSplashText, (getWidth() / 2 - mBound.width() / 2), (getHeight() / 2 + mBound.height() / 2), mPaintSplashText);
         mPaintSplashText.setColor(getResources().getColor(R.color.black));
+        mPaintSplashText.getTextBounds(mSplashText, 0, mSplashText.length(), mBound);
+//        canvas.drawText(mSplashText,getWidth()/2-mBound.width()/2,getHeight()/2+mBound.height()/2,mPaintSplashText);
         canvas.drawText(mSplashText, (getWidth() / 2 - getTextWidth(mSplashText,mPaintSplashText) / 2), (getHeight() / 2 + getTextHeight(mSplashText,mPaintSplashText) / 2), mPaintSplashText);
+        Log.d("onDraw","getWidth()--" + getWidth() + "   getTextBounds()--" + mBound.width() + " measureText()--" + getTextWidth(mSplashText,mPaintSplashText));
 
     }
     private float getTextWidth(String text, Paint paint) {
