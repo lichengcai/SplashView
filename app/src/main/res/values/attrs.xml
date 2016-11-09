@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SplashView">
+        <attr name="splash_text" format="string"/>
+        <attr name="splash_size" format="dimension"/>
+    </declare-styleable>
+
+</resources>
