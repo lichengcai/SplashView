@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Toast;
 
 import com.splashview.R;
 
@@ -27,6 +28,12 @@ import java.util.HashMap;
  */
 
 public class SplashView extends View {
+    private int tab =0;
+    private float mTextW = 0;
+    private float mTextH = 0;
+    private float mRightWidth = 0;
+    private float mRad =0;
+    private float mSpreadWidth = 0;
     /**
      * 粒子覆盖文字内容
      */
@@ -140,13 +147,18 @@ public class SplashView extends View {
             public void onAnimationUpdate(ValueAnimator animation) {
                 int textSize = (int) animation.getAnimatedValue();
                 mPaintSplashText.setTextSize(textSize);
-                mPaintSplashText.getTextBounds(mSplashText, 0, mSplashText.length(), mBound);
-                int boundWidth = mBound.width();
-                int boundHeight = mBound.height();
-                Log.d("onMeasure"," boundWidth--" + boundWidth + "  boundHeight--" + boundHeight);
+//                mPaintSplashText.getTextBounds(mSplashText, 0, mSplashText.length(), mBound);
+//                int boundWidth = mBound.width();
+//                int boundHeight = mBound.height();
+//                Log.d("onMeasure"," boundWidth--" + boundWidth + "  boundHeight--" + boundHeight);
                 postInvalidate();
+                if (textSize == mSplashSizeEnd) {
+                    Log.d("onAnimationEnd","animation is finish");
+                }
             }
         });
+
+
         valueAnimator.start();
 
         mPaintSplashText.setTextSize(mSplashSizeEnd);
@@ -155,6 +167,8 @@ public class SplashView extends View {
         float textHeight = getTextHeight(mSplashText,mPaintSplashText);
         Log.d("EndText"," textWidth--"+textWidth + "  textHeight--" + textHeight);
         float ra = (textWidth+40)/56;
+        mTextW = textWidth+40;
+        mRad = ra;
         float da = (textHeight+20)/9;
         float Ex = getWidth()/2-textWidth/2-20+ra;
         float Ey = getHeight()/2-textHeight/2-10;
@@ -178,6 +192,7 @@ public class SplashView extends View {
                 objectAnimator.setDuration((long) (Math.random() + 100 * i + 150 * j));
                 final int finalI = i;
                 final int finalJ = j;
+
                 objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
@@ -194,6 +209,70 @@ public class SplashView extends View {
         }
         set.playTogether(animList);
         set.start();
+
+        final ValueAnimator value = ValueAnimator.ofFloat(0,(textWidth+40)/2);
+        value.setDuration(500);
+        value.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mSpreadWidth = (float) animation.getAnimatedValue();
+                postInvalidate();
+            }
+        });
+
+        valueAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                value.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        final ValueAnimator valueRight = ValueAnimator.ofFloat(0,(textWidth+40)/2);
+        valueRight.setDuration(1000);
+        valueRight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mRightWidth = (float) animation.getAnimatedValue();
+                postInvalidate();
+            }
+        });
+        value.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                tab = 1;
+                valueRight.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
     }
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -203,32 +282,59 @@ public class SplashView extends View {
         Log.d("onSizeChanged"," w--" + w + "  h--" + h + "oldW--" + oldw + "  oldH--" + oldh);
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        switch (tab) {
+            case 0:
+                for (ArrayList<Circle> array : mCircleMapStart.values()) {
+                    for (int i=0; i<array.size(); i++) {
+                        Circle circle = array.get(i);
+                        canvas.drawCircle(circle.getX(),circle.getY(),circle.getR(),mPaintCircle);
+                    }
+                }
 
-        for (ArrayList<Circle> array : mCircleMapStart.values()) {
-            for (int i=0; i<array.size(); i++) {
-                Circle circle = array.get(i);
-                canvas.drawCircle(circle.getX(),circle.getY(),circle.getR(),mPaintCircle);
-            }
+                canvas.drawRect(getWidth()/2-mSpreadWidth,getHeight()/2-getTextHeight(mSplashText,mPaintSplashText)/2-10-mRad
+                        ,getWidth()/2+mSpreadWidth,getHeight()/2+getTextHeight(mSplashText,mPaintSplashText)/2+10+mRad,mPaintCircle);
+
+                mPaintSplashText.setColor(getResources().getColor(R.color.transTest));
+                mPaintSplashText.getTextBounds(mSplashText, 0, mSplashText.length(), mBound);
+                canvas.drawText(mSplashText, (getWidth() / 2 - getTextWidth(mSplashText,mPaintSplashText) / 2),
+                        (getHeight() / 2 + getTextHeight(mSplashText,mPaintSplashText) / 2), mPaintSplashText);
+
+                break;
+            case 1:
+
+                canvas.drawText("learn", (getWidth() / 2-10 - getTextWidth("learn",mPaintSplashText) / 2-mRightWidth),
+                        (getHeight() / 2 + getTextHeight("learn",mPaintSplashText) / 2), mPaintSplashText);
+
+                canvas.drawRect(getWidth()/2-mTextW/2+mRightWidth,getHeight()/2-getTextHeight(mSplashText,mPaintSplashText)/2-10-mRad,
+                        getWidth()/2+mTextW/2+mRightWidth,getHeight()/2+getTextHeight(mSplashText,mPaintSplashText)/2+10+mRad,mPaintCircle);
+
+                mPaintSplashText.setColor(getResources().getColor(R.color.buy_now));
+                canvas.drawText(mSplashText, (getWidth() / 2 - getTextWidth(mSplashText,mPaintSplashText) / 2+mRightWidth),
+                        (getHeight() / 2 + getTextHeight(mSplashText,mPaintSplashText) / 2), mPaintSplashText);
+
+
+                break;
         }
-//        canvas.drawText(mSplashText, (getWidth() / 2 - mBound.width() / 2), (getHeight() / 2 + mBound.height() / 2), mPaintSplashText);
-        mPaintSplashText.setColor(getResources().getColor(R.color.black));
-        mPaintSplashText.getTextBounds(mSplashText, 0, mSplashText.length(), mBound);
-//        canvas.drawText(mSplashText,getWidth()/2-mBound.width()/2,getHeight()/2+mBound.height()/2,mPaintSplashText);
-        canvas.drawText(mSplashText, (getWidth() / 2 - getTextWidth(mSplashText,mPaintSplashText) / 2), (getHeight() / 2 + getTextHeight(mSplashText,mPaintSplashText) / 2), mPaintSplashText);
-        Log.d("onDraw","getWidth()--" + getWidth() + "   getTextBounds()--" + mBound.width() + " measureText()--" + getTextWidth(mSplashText,mPaintSplashText));
 
     }
+
+
     private float getTextWidth(String text, Paint paint) {
         return paint.measureText(text);
     }
+
+
     private float getTextHeight(String text, Paint paint) {
         Rect rect = new Rect();
         paint.getTextBounds(text, 0, text.length(), rect);
         return rect.height() / 1.1f;
     }
+
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

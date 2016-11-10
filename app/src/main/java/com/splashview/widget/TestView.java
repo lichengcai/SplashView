@@ -1,7 +1,9 @@
 package com.splashview.widget;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -35,6 +37,20 @@ public class TestView extends View {
 
     }
 
+    private float width;
+    public void testR() {
+        ValueAnimator animator = ValueAnimator.ofFloat(0,500);
+        animator.setDuration(5000);
+        animator.start();
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                width = (float) animation.getAnimatedValue();
+                postInvalidate();
+            }
+        });
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -59,6 +75,16 @@ public class TestView extends View {
          + " bounds.toShortString--" + bounds.toShortString()
         + " bounds.left--" + bounds.left
         + " bounds.right--" + bounds.right);
+
+
+        canvas.drawText("画矩形：", 10, 80, p);
+        p.setColor(Color.GRAY);// 设置灰色
+        p.setStyle(Paint.Style.FILL);//设置填满
+        canvas.drawRect(500-width, 600, 500+width, 800, p);// 正方形
+
+
+
+
 
 
 //        p.setTextSize(60);
