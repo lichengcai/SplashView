@@ -48,16 +48,7 @@ public class SecondActivity extends Activity {
     }
 
     public void aniTwo(View view) {
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(0,5,0);
-        valueAnimator.setDuration(200);
-        valueAnimator.start();
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (int) animation.getAnimatedValue();
-                Log.d("value"," value---" + value);
-            }
-        });
+        circleView.two();
     }
 
     public void aniOne(View view) {
