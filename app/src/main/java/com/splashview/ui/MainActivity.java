@@ -1,9 +1,10 @@
-package com.splashview;
+package com.splashview.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.splashview.R;
 import com.splashview.widget.SplashView;
 
 public class MainActivity extends AppCompatActivity {

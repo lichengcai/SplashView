@@ -1,9 +1,11 @@
-package com.splashview;
+package com.splashview.ui;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.splashview.R;
 
 /**
  * Created by lichengcai on 2016/11/9.
@@ -22,5 +24,8 @@ public class FirstActivity extends Activity {
 
     public void testView(View view) {
         startActivity(new Intent(this,TestViewActivity.class));
+    }
+    public void second(View view) {
+        startActivity(new Intent(this,SecondActivity.class));
     }
 }

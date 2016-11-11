@@ -1,9 +1,10 @@
-package com.splashview;
+package com.splashview.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.splashview.R;
 import com.splashview.widget.TestView;
 
 /**
