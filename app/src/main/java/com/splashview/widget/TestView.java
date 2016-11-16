@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.splashview.R;
@@ -35,6 +36,34 @@ public class TestView extends View {
         super(context, attrs, defStyleAttr);
 
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+                float x1 = event.getX();
+                float y1 = event.getY();
+                float rx1 = event.getRawX();
+                float ry1 = event.getRawY();
+                Log.d("ACTION_MOVE","x1==" + x1 + "  y1==" + y1 + "  rx1==" + rx1 + "  ry1==" + ry1);
+                break;
+            case MotionEvent.ACTION_DOWN:
+                float x = event.getX();
+                float y = event.getY();
+                float rx = event.getRawX();
+                float ry = event.getRawY();
+                Log.d("ACTION_DOWN","x==" + x + "  y==" + y + "  rx==" + rx + "  ry==" + ry);
+                break;
+            case MotionEvent.ACTION_UP:
+                float x2 = event.getX();
+                float y2 = event.getY();
+                float rx2 = event.getRawX();
+                float ry2 = event.getRawY();
+                Log.d("ACTION_MOVE","x2==" + x2 + "  y2==" + y2 + "  rx2==" + rx2 + "  ry2==" + ry2);
+                break;
+        }
+        return super.onTouchEvent(event);
     }
 
     private float width;
